@@ -4,7 +4,7 @@ MAINTAINER Joo Youngjin <youngjinj@cubrid.com>
 
 RUN yum update -y \
     && yum install -y epel-release \
-    && yum install -y centos-release-scl \
+    && yum install -y yum-plugin-fastestmirror \
     && yum install -y sudo \
                       vim \
                       which \
@@ -16,7 +16,12 @@ RUN yum update -y \
                       openssh-server \
                       openssh-clients \
                       sshpass \
-    && yum install -y devtoolset-8 \
+    && yum install -y gdb \
+                      cgdb \
+                      ctags \
+                      cscope \
+    && yum install -y centos-release-scl \
+    && yum install -y devtoolset-8-\* \
                       scl-utils \
                       java-1.8.0-openjdk-devel \
                       git \
@@ -31,9 +36,10 @@ RUN yum update -y \
                       elfutils-libelf-devel \
                       libtool \
                       rpm-build \
-    && yum install -y gdb \
-                      ctags \
-                      cscope \
+    && debuginfo-install -y glibc \
+                            libgcc \
+                            libstdc++ \
+                            ncurses-libs \
     && yum clean all
 
 RUN localedef -f UTF-8 -i ko_KR ko_KR.utf8 \
@@ -59,8 +65,16 @@ RUN useradd cubrid \
     cubrid\t\t hard\t core\t\t unlimited\n' -i /etc/security/limits.conf \
     && echo -e "\ncubrid     soft    nproc     65546\ncubrid     hard    nproc     65536" >> /etc/security/limits.d/20-nproc.conf
 
+COPY .vimrc /home/cubrid/
+COPY .gdbinit /home/cubrid/
+
 RUN mkdir -p /home/cubrid/github/cubrid \
     && git clone -b develop --recursive https://github.com/youngjinj/cubrid.git /home/cubrid/github/cubrid
+
+RUN cd /home/cubrid/github/cubrid/src \
+    && ctags -R \
+    && echo '' >> /home/cubrid/.vimrc \
+    && echo 'set tags =/home/cubrid/github/cubrid/src/tags' >> /home/cubrid/.vimrc
 
 RUN source scl_source enable devtoolset-8 \
     && cd /home/cubrid/github/cubrid \
