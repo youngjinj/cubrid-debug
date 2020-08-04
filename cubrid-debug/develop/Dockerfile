@@ -56,20 +56,18 @@ RUN ssh-keygen -f /etc/ssh/ssh_host_rsa_key -t rsa -N "" \
 
 RUN mkdir /docker-entrypoint-initdb.d
 
+RUN sed -e "$(grep -n '# End of file' /etc/security/limits.conf  | cut -d':' -f1) i\*\t\t soft\t core\t\t unlimited\n*\t\t hard\t core\t\t unlimited\n*\t\t soft\t nofile\t\t 65536\n*\t\t hard\t nofile\t\t 65536\n*\t\t soft\t nproc\t\t 65536\n*\t\t hard\t nproc\t\t 65536\n" -i /etc/security/limits.conf \
+    && echo -e "\n*\t   soft\t   nproc     65536\n*\t   hard\t   nproc     65536" >> /etc/security/limits.d/20-nproc.conf
+
 RUN useradd cubrid \
     && sed 102s/#\ %wheel/%wheel/g -i /etc/sudoers \
-    && sed s/wheel:x:10:/wheel:x:10:cubrid/g -i /etc/group \
-    && sed -e '61 i\cubrid\t\t soft\t nofile\t\t 65536 \
-    cubrid\t\t hard\t nofile\t\t 65536 \
-    cubrid\t\t soft\t core\t\t unlimited \
-    cubrid\t\t hard\t core\t\t unlimited\n' -i /etc/security/limits.conf \
-    && echo -e "\ncubrid     soft    nproc     65546\ncubrid     hard    nproc     65536" >> /etc/security/limits.d/20-nproc.conf
+    && sed s/wheel:x:10:/wheel:x:10:cubrid/g -i /etc/group
 
 COPY .vimrc /home/cubrid/
 COPY .gdbinit /home/cubrid/
 
 RUN mkdir -p /home/cubrid/github/cubrid \
-    && git clone -b develop --recursive https://github.com/youngjinj/cubrid.git /home/cubrid/github/cubrid
+    && git clone -b develop --recursive https://github.com/CUBRID/cubrid.git /home/cubrid/github/cubrid
 
 RUN cd /home/cubrid/github/cubrid/src \
     && ctags -R \
