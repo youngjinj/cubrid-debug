@@ -69,10 +69,10 @@ COPY .gdbinit /home/cubrid/
 RUN mkdir -p /home/cubrid/github/cubrid \
     && git clone -b develop --recursive https://github.com/CUBRID/cubrid.git /home/cubrid/github/cubrid
 
-RUN cd /home/cubrid/github/cubrid/src \
+RUN cd /home/cubrid/github/cubrid \
     && ctags -R \
     && echo '' >> /home/cubrid/.vimrc \
-    && echo 'set tags =/home/cubrid/github/cubrid/src/tags' >> /home/cubrid/.vimrc
+    && echo 'set tags =/home/cubrid/github/cubrid/tags' >> /home/cubrid/.vimrc
 
 RUN source scl_source enable devtoolset-8 \
     && cd /home/cubrid/github/cubrid \
