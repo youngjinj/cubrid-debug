@@ -1,10 +1,24 @@
+set encoding=utf-8
+set fileencodings=utf-8
+set termencoding=utf-8
+
+set paste
+
 if has("syntax")
 	syntax on
 endif
 
-set ts=4
-set sts=4
-set sw=4
+set tabstop=8
+set softtabstop=8
+set shiftwidth=8
+" set expandtab
 
-set encoding=utf-8
-set fileencodings=utf-8
+set cindent
+set autoindent
+set smartindent
+
+set number
+set ruler
+
+set cursorline
+set showmatch
