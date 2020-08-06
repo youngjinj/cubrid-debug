@@ -22,3 +22,6 @@ set ruler
 
 set cursorline
 set showmatch
+
+set laststatus=2
+set statusline=%F\ %y%m%r\ %=Line:\ %l/%L\ [%p%%]\ Col:%c\ Buf:%n

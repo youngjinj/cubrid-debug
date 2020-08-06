@@ -52,6 +52,11 @@ ENV LANGUAGE ko_KR.utf8
 RUN sed -e "$(grep -n '# End of file' /etc/security/limits.conf  | cut -d':' -f1) i\*\t\t soft\t core\t\t unlimited\n*\t\t hard\t core\t\t unlimited\n*\t\t soft\t nofile\t\t 65536\n*\t\t hard\t nofile\t\t 65536\n*\t\t soft\t nproc\t\t 65536\n*\t\t hard\t nproc\t\t 65536\n" -i /etc/security/limits.conf \
     && echo -e "\n*\t   soft\t   nproc     65536\n*\t   hard\t   nproc     65536" >> /etc/security/limits.d/20-nproc.conf
 
+RUN ssh-keygen -f /etc/ssh/ssh_host_rsa_key -t rsa -N "" \
+    && ssh-keygen -f /etc/ssh/ssh_host_ecdsa_key -t ecdsa -N "" \
+    && ssh-keygen -f /etc/ssh/ssh_host_ed25519_key -t ed25519 -N "" \
+    && chmod u+s /usr/bin/ping
+
 RUN useradd cubrid \
     && sed 102s/#\ %wheel/%wheel/g -i /etc/sudoers \
     && sed s/wheel:x:10:/wheel:x:10:cubrid/g -i /etc/group
@@ -66,11 +71,6 @@ RUN source scl_source enable devtoolset-8 \
     && mkdir -p /home/cubrid/CUBRID/databases \
                 /home/cubrid/CUBRID/tmp \
                 /home/cubrid/CUBRID/var/CUBRID_SOCK
-
-RUN cd /home/cubrid/github/cubrid \
-    && ctags -R \
-    && echo '' >> /home/cubrid/.vimrc \
-    && echo 'set tags =/home/cubrid/github/cubrid/tags' >> /home/cubrid/.vimrc
 
 COPY cubrid.sh /home/cubrid/
 
@@ -87,12 +87,15 @@ RUN echo '' >> /home/cubrid/.bash_profile \
     && chown -R cubrid:cubrid /home/cubrid
 
 COPY .vimrc /home/cubrid/
+
+RUN cd /home/cubrid/github/cubrid \
+    && ctags -R \
+    && echo '' >> /home/cubrid/.vimrc \
+    && echo 'set tags =/home/cubrid/github/cubrid/tags' >> /home/cubrid/.vimrc
+
 COPY .gdbinit /home/cubrid/
 
-RUN ssh-keygen -f /etc/ssh/ssh_host_rsa_key -t rsa -N "" \
-    && ssh-keygen -f /etc/ssh/ssh_host_ecdsa_key -t ecdsa -N "" \
-    && ssh-keygen -f /etc/ssh/ssh_host_ed25519_key -t ed25519 -N "" \
-    && chmod u+s /usr/bin/ping
+RUN chown -R cubrid:cubrid /home/cubrid/
 
 RUN mkdir /docker-entrypoint-initdb.d
 
