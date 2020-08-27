@@ -1,26 +1,24 @@
 export CUBRID=/home/cubrid/CUBRID
 export CUBRID_DATABASES=$CUBRID/databases
-if [ ! -z $LD_LIBRARY_PATH ]; then
-  export LD_LIBRARY_PATH=$CUBRID/lib:$LD_LIBRARY_PATH
+if [ ! -z "$LD_LIBRARY_PATH" ]; then
+	export LD_LIBRARY_PATH=$CUBRID/lib:$LD_LIBRARY_PATH
 else
-  export LD_LIBRARY_PATH=$CUBRID/lib
+	export LD_LIBRARY_PATH=$CUBRID/lib
 fi
-export SHLIB_PATH=$LD_LIBRARY_PATH
-export LIBPATH=$LD_LIBRARY_PATH
 export PATH=$CUBRID/bin:$PATH
 
-if [ ! -d $CUBRID_DATABASES ]; then
-    mkdir -p $CUBRID_DATABASES
+if [ ! -d "$CUBRID_DATABASES" ]; then
+	mkdir -p $CUBRID_DATABASES
 fi
 
 export TMPDIR=$CUBRID/tmp
-if [ ! -d $TMPDIR ]; then
-    mkdir -p $TMPDIR
+if [ ! -d "$TMPDIR" ]; then
+	mkdir -p $TMPDIR
 fi
 
 export CUBRID_TMP=$CUBRID/var/CUBRID_SOCK
-if [ ! -d $CUBRID_TMP ]; then
-    mkdir -p $CUBRID_TMP
+if [ ! -d "$CUBRID_TMP" ]; then
+	mkdir -p $CUBRID_TMP
 fi
 
 export JAVA_HOME=/usr/lib/jvm/java

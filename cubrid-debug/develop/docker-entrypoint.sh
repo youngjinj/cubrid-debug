@@ -1,4 +1,5 @@
 #!/bin/bash
+
 shopt -s nullglob
 
 # 데이터베이스 기본 문자셋을 설정합니다.
