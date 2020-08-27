@@ -94,6 +94,7 @@ RUN mkdir /home/cubrid/bin
 COPY execute_build.sh /home/cubrid/bin/
 COPY make_ctags_cscope.sh /home/cubrid/bin/
 
+RUN chmod u+x /home/cubrid/bin/execute_build.sh
 RUN chmod u+x /home/cubrid/bin/make_ctags_cscope.sh
 
 COPY .gdbinit /home/cubrid/
