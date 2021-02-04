@@ -4,7 +4,8 @@ MAINTAINER Joo Youngjin <youngjinj@cubrid.com>
 
 RUN yum update -y \
 	&& yum install -y	epel-release \
-	&& yum install -y	yum-plugin-fastestmirror \
+	&& yum install -y	yum-utils \
+				yum-plugin-fastestmirror \
 	&& yum install -y	sudo \
 				vim \
 				which \
